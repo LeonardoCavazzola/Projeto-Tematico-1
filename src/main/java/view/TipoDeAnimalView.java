@@ -1,21 +1,23 @@
 package view;
 
 import model.TipoDeAnimal;
+import service.TipoDeAnimalService;
 
 public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimalConsultaOwner {
 
     private Operacao operacao = null;
     private TipoDeAnimal tipoDeAnimal = null;
+    private final TipoDeAnimalService tipoDeAnimalService = new TipoDeAnimalService();
 
     public TipoDeAnimalView() {
         initComponents();
     }
 
     private void setEntity(TipoDeAnimal tipoDeAnimal) {
-        this.operacao = Operacao.UPDATE;
         this.tipoDeAnimal = tipoDeAnimal;
         this.jTextFieldID.setText(tipoDeAnimal.getId().toString());
         this.jTextFieldNome.setText(tipoDeAnimal.getNome());
+        this.habilitarDesabiliarBotoes();
     }
 
     private void setEnabledCampos(Boolean enabled) {
@@ -27,22 +29,53 @@ public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimal
         this.jTextFieldNome.setText("");
     }
 
-    private void create() {
+    private void novo() {
+        this.operacao = Operacao.CREATE;
+        this.limparCampos();
+        this.setEnabledCampos(true);
+        this.habilitarDesabiliarBotoes();
+    }
 
+    private void alterar() {
+        this.operacao = Operacao.UPDATE;
+        this.setEnabledCampos(true);
+        this.habilitarDesabiliarBotoes();
+    }
+
+    private void cancelar() {
+        this.operacao = null;
+        this.limparCampos();
+        this.setEnabledCampos(false);
+        this.habilitarDesabiliarBotoes();
+    }
+
+    private void habilitarDesabiliarBotoes() {
+        this.jButtonConfirmar.setEnabled(operacao != null);
+        this.jButtonAlterar.setEnabled(!jTextFieldNome.getText().equals(""));
+        this.jButtonNovo.setEnabled(operacao == null);
+        this.jButtonBuscar.setEnabled(operacao == null);
+        this.jButtonCancelar.setEnabled(operacao != null);
+    }
+
+    private void create() {
+        this.tipoDeAnimal = new TipoDeAnimal(jTextFieldNome.getText());
+        TipoDeAnimal tipoDeAnimal = this.tipoDeAnimalService.create(this.tipoDeAnimal);
+        this.jTextFieldID.setText(tipoDeAnimal.getId().toString());
     }
 
     private void update() {
-
+        this.tipoDeAnimal.setNome(jTextFieldNome.getText());
+        this.tipoDeAnimalService.update(tipoDeAnimal);
     }
 
     private void confirm() {
-        this.operacao = null;
-        this.setEnabledCampos(false);
-        if (this.operacao == Operacao.CREATE) {
-            create();
-        } else {
-            update();
+        switch (operacao) {
+            case CREATE -> create();
+            case UPDATE -> update();
         }
+        this.setEnabledCampos(false);
+        this.operacao = null;
+        this.habilitarDesabiliarBotoes();
     }
 
     @SuppressWarnings("unchecked")
@@ -57,10 +90,12 @@ public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimal
         jTextFieldNome = new javax.swing.JTextField();
         jLabelNome = new javax.swing.JLabel();
         jButtonBuscar = new javax.swing.JButton();
+        jButtonNovo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButtonConfirmar.setText("Confirmar");
+        jButtonConfirmar.setEnabled(false);
         jButtonConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonConfirmarActionPerformed(evt);
@@ -68,6 +103,7 @@ public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimal
         });
 
         jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.setEnabled(false);
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelarActionPerformed(evt);
@@ -75,6 +111,7 @@ public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimal
         });
 
         jButtonAlterar.setText("Alterar");
+        jButtonAlterar.setEnabled(false);
         jButtonAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAlterarActionPerformed(evt);
@@ -82,6 +119,10 @@ public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimal
         });
 
         jLabelID.setText("ID:");
+
+        jTextFieldID.setEnabled(false);
+
+        jTextFieldNome.setEnabled(false);
 
         jLabelNome.setText("Nome:");
 
@@ -92,49 +133,59 @@ public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimal
             }
         });
 
+        jButtonNovo.setText("Novo");
+        jButtonNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNovoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelID)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabelNome)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
-                        .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jButtonConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabelID)
+                                                        .addComponent(jLabelNome))
+                                                .addGap(74, 74, 74)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jTextFieldNome)
+                                                        .addComponent(jTextFieldID))))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelID)
-                    .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelNome)
-                    .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonConfirmar)
-                    .addComponent(jButtonCancelar)
-                    .addComponent(jButtonAlterar)
-                    .addComponent(jButtonBuscar))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabelID)
+                                        .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabelNome)
+                                        .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButtonConfirmar)
+                                        .addComponent(jButtonCancelar)
+                                        .addComponent(jButtonAlterar)
+                                        .addComponent(jButtonBuscar)
+                                        .addComponent(jButtonNovo))
+                                .addContainerGap())
         );
 
         pack();
@@ -145,23 +196,27 @@ public class TipoDeAnimalView extends javax.swing.JFrame implements TipoDeAnimal
     }//GEN-LAST:event_jButtonConfirmarActionPerformed
 
     private void jButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarActionPerformed
-        
+        this.alterar();
     }//GEN-LAST:event_jButtonAlterarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        this.limparCampos();
-        this.tipoDeAnimal = null;
+        this.cancelar();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         this.showTipoDeAnimalConsulta(this::setEntity);
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
+    private void jButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoActionPerformed
+        this.novo();
+    }//GEN-LAST:event_jButtonNovoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonConfirmar;
+    private javax.swing.JButton jButtonNovo;
     private javax.swing.JLabel jLabelID;
     private javax.swing.JLabel jLabelNome;
     private javax.swing.JTextField jTextFieldID;
