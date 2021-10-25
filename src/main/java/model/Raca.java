@@ -20,4 +20,24 @@ public class Raca {
         this.nome = nome;
         this.tipoDeAnimal = tipoDeAnimal;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public TipoDeAnimal getTipoDeAnimal() {
+        return tipoDeAnimal;
+    }
+
+    public void setTipoDeAnimal(TipoDeAnimal tipoDeAnimal) {
+        this.tipoDeAnimal = tipoDeAnimal;
+    }
 }

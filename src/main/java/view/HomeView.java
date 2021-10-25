@@ -11,7 +11,7 @@ public class HomeView extends javax.swing.JFrame {
     private void initComponents() {
 
         jButtonTipoDeAnimal = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButtonRacas = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuUsuario = new javax.swing.JMenu();
         jMenuItemLogoff = new javax.swing.JMenuItem();
@@ -27,7 +27,12 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("jButton2");
+        jButtonRacas.setText("Raças");
+        jButtonRacas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRacasActionPerformed(evt);
+            }
+        });
 
         jMenuUsuario.setText("Usuário");
 
@@ -51,7 +56,7 @@ public class HomeView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jButtonTipoDeAnimal, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+                .addComponent(jButtonRacas, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -60,7 +65,7 @@ public class HomeView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonTipoDeAnimal)
-                    .addComponent(jButton2))
+                    .addComponent(jButtonRacas))
                 .addContainerGap(168, Short.MAX_VALUE))
         );
 
@@ -75,8 +80,12 @@ public class HomeView extends javax.swing.JFrame {
         new TipoDeAnimalView().setVisible(true);
     }//GEN-LAST:event_jButtonTipoDeAnimalActionPerformed
 
+    private void jButtonRacasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRacasActionPerformed
+        new RacaView().setVisible(true);
+    }//GEN-LAST:event_jButtonRacasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonRacas;
     private javax.swing.JButton jButtonTipoDeAnimal;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemLogoff;
