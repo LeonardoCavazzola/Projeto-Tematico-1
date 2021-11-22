@@ -21,12 +21,12 @@ public class AdotanteService {
         return insert;
     }
 
-    public Adotante update(Adotante raca) {
+    public Adotante update(Adotante adotante) {
 
         EntityManager entityManager = EntityManagerProvider.getInstanceOfEntityManager();
         AdotanteRepository repository = new AdotanteRepository(entityManager);
 
-        Adotante update = repository.update(raca);
+        Adotante update = repository.update(adotante);
         entityManager.getTransaction().commit();
         return update;
     }

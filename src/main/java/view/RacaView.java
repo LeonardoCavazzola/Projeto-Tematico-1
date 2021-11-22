@@ -3,7 +3,6 @@ package view;
 import model.Raca;
 import model.TipoDeAnimal;
 import service.RacaService;
-import service.TipoDeAnimalService;
 
 public class RacaView extends javax.swing.JFrame implements RacaConsultaOwner, TipoDeAnimalConsultaOwner {
 
