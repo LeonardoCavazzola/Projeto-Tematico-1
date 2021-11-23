@@ -13,6 +13,7 @@ public class HomeView extends javax.swing.JFrame {
         jButtonTipoDeAnimal = new javax.swing.JButton();
         jButtonRacas = new javax.swing.JButton();
         jButtonAdotante = new javax.swing.JButton();
+        jButtonDoador = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuUsuario = new javax.swing.JMenu();
         jMenuItemLogoff = new javax.swing.JMenuItem();
@@ -39,6 +40,13 @@ public class HomeView extends javax.swing.JFrame {
         jButtonAdotante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAdotanteActionPerformed(evt);
+            }
+        });
+
+        jButtonDoador.setText("Doador");
+        jButtonDoador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDoadorActionPerformed(evt);
             }
         });
 
@@ -69,7 +77,9 @@ public class HomeView extends javax.swing.JFrame {
                         .addComponent(jButtonRacas, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonAdotante, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonAdotante, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonDoador, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -81,7 +91,9 @@ public class HomeView extends javax.swing.JFrame {
                     .addComponent(jButtonRacas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonAdotante)
-                .addContainerGap(137, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonDoador)
+                .addContainerGap(106, Short.MAX_VALUE))
         );
 
         pack();
@@ -103,8 +115,13 @@ public class HomeView extends javax.swing.JFrame {
         new AdotanteView().setVisible(true);
     }//GEN-LAST:event_jButtonAdotanteActionPerformed
 
+    private void jButtonDoadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDoadorActionPerformed
+        new DoadorView().setVisible(true);
+    }//GEN-LAST:event_jButtonDoadorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdotante;
+    private javax.swing.JButton jButtonDoador;
     private javax.swing.JButton jButtonRacas;
     private javax.swing.JButton jButtonTipoDeAnimal;
     private javax.swing.JMenuBar jMenuBar1;
