@@ -14,6 +14,7 @@ public class HomeView extends javax.swing.JFrame {
         jButtonRacas = new javax.swing.JButton();
         jButtonAdotante = new javax.swing.JButton();
         jButtonDoador = new javax.swing.JButton();
+        jButtonConsumivel = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuUsuario = new javax.swing.JMenu();
         jMenuItemLogoff = new javax.swing.JMenuItem();
@@ -50,6 +51,13 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
 
+        jButtonConsumivel.setText("Consumivel");
+        jButtonConsumivel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConsumivelActionPerformed(evt);
+            }
+        });
+
         jMenuUsuario.setText("Usuário");
 
         jMenuItemLogoff.setText("Logoff");
@@ -74,12 +82,15 @@ public class HomeView extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonTipoDeAnimal, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonRacas, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE))
+                        .addComponent(jButtonRacas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonAdotante, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonDoador, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButtonDoador, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButtonConsumivel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonAdotante, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -90,7 +101,9 @@ public class HomeView extends javax.swing.JFrame {
                     .addComponent(jButtonTipoDeAnimal)
                     .addComponent(jButtonRacas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonAdotante)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonAdotante)
+                    .addComponent(jButtonConsumivel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonDoador)
                 .addContainerGap(106, Short.MAX_VALUE))
@@ -119,8 +132,13 @@ public class HomeView extends javax.swing.JFrame {
         new DoadorView().setVisible(true);
     }//GEN-LAST:event_jButtonDoadorActionPerformed
 
+    private void jButtonConsumivelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsumivelActionPerformed
+        new ConsumivelView().setVisible(true);
+    }//GEN-LAST:event_jButtonConsumivelActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdotante;
+    private javax.swing.JButton jButtonConsumivel;
     private javax.swing.JButton jButtonDoador;
     private javax.swing.JButton jButtonRacas;
     private javax.swing.JButton jButtonTipoDeAnimal;
