@@ -1,40 +1,38 @@
 package view;
 
-import model.Raca;
-import model.TipoDeAnimal;
-import service.RacaService;
-import service.TipoDeAnimalService;
+import model.Animal;
+import service.AnimalService;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RacaConsultaView extends javax.swing.JFrame {
+public class AnimalConsultaView extends javax.swing.JFrame {
 
-    private final Consumer<Raca> onConfirm;
-    private final RacaService service = new RacaService();
-    private List<Raca> list;
+    private final Consumer<Animal> onConfirm;
+    private final AnimalService animalService = new AnimalService();
+    private List<Animal> list;
 
-    public RacaConsultaView(Consumer<Raca> onConfirm) {
+    public AnimalConsultaView(Consumer<Animal> onConfirm) {
         initComponents();
         this.onConfirm = onConfirm;
     }
 
     private void procurar() {
-        list = this.service.findAllByNomeContaining(jTextFieldNome.getText());
+        list = this.animalService.findAllByNomeContaining(jTextFieldNome.getText());
         DefaultTableModel model = (DefaultTableModel) jTableConsulta.getModel();
         while (model.getRowCount() > 0) {
             model.removeRow(0);
         }
-        list.forEach(tipoDeAnimal -> model.addRow(new Object[]{
-                tipoDeAnimal.getId(),
-                tipoDeAnimal.getNome(),
+        list.forEach(animal -> model.addRow(new Object[]{
+                animal.getId(),
+                animal.getNome(),
         }));
     }
 
     private void confirmar() {
-        Raca raca = list.get(jTableConsulta.getSelectedRow());
-        onConfirm.accept(raca);
+        Animal animal = list.get(jTableConsulta.getSelectedRow());
+        onConfirm.accept(animal);
         this.dispose();
     }
 
@@ -154,7 +152,7 @@ public class RacaConsultaView extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonConfirmarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        // TODO add your handling code here:
+        dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed

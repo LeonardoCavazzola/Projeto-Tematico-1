@@ -16,10 +16,10 @@ public class Animal {
     private LocalDate dataDeAdocao;
     private Boolean adotado;
 
-    @ManyToMany
-    private List<Raca> racas;
+    @ManyToOne
+    private Raca raca;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Historico> historicos;
 
     @ManyToOne
@@ -28,13 +28,73 @@ public class Animal {
     public Animal() {
     }
 
-    public Animal(String nome, LocalDate nascimento, LocalDate dataDeAdocao, Boolean adotado, List<Raca> racas, List<Historico> historicos, Adotante adotante) {
+    public Animal(String nome, LocalDate nascimento, LocalDate dataDeAdocao, Boolean adotado, Raca raca, List<Historico> historicos, Adotante adotante) {
         this.nome = nome;
         this.nascimento = nascimento;
         this.dataDeAdocao = dataDeAdocao;
         this.adotado = adotado;
-        this.racas = racas;
+        this.raca = raca;
         this.historicos = historicos;
+        this.adotante = adotante;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public LocalDate getNascimento() {
+        return nascimento;
+    }
+
+    public void setNascimento(LocalDate nascimento) {
+        this.nascimento = nascimento;
+    }
+
+    public LocalDate getDataDeAdocao() {
+        return dataDeAdocao;
+    }
+
+    public void setDataDeAdocao(LocalDate dataDeAdocao) {
+        this.dataDeAdocao = dataDeAdocao;
+    }
+
+    public Boolean getAdotado() {
+        return adotado;
+    }
+
+    public void setAdotado(Boolean adotado) {
+        this.adotado = adotado;
+    }
+
+    public Raca getRaca() {
+        return raca;
+    }
+
+    public void setRaca(Raca raca) {
+        this.raca = raca;
+    }
+
+    public List<Historico> getHistoricos() {
+        return historicos;
+    }
+
+    public void setHistoricos(List<Historico> historicos) {
+        this.historicos = historicos;
+    }
+
+    public Adotante getAdotante() {
+        return adotante;
+    }
+
+    public void setAdotante(Adotante adotante) {
         this.adotante = adotante;
     }
 }
