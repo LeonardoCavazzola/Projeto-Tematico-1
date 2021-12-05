@@ -13,6 +13,7 @@ public class RacaView extends javax.swing.JFrame implements RacaConsultaOwner, T
 
     public RacaView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     private void setEntity(Raca raca) {

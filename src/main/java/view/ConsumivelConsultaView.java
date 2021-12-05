@@ -15,6 +15,7 @@ public class ConsumivelConsultaView extends javax.swing.JFrame {
 
     public ConsumivelConsultaView(Consumer<Consumivel> onConfirm) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.onConfirm = onConfirm;
     }
 

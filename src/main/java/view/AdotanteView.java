@@ -20,6 +20,7 @@ public class AdotanteView extends javax.swing.JFrame implements AdotanteConsulta
 
     public AdotanteView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     private void setEntity(Adotante adotante) {

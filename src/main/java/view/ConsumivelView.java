@@ -11,6 +11,7 @@ public class ConsumivelView extends javax.swing.JFrame implements ConsumivelCons
 
     public ConsumivelView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     private void setEntity(Consumivel consumivel) {

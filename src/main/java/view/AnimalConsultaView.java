@@ -15,6 +15,7 @@ public class AnimalConsultaView extends javax.swing.JFrame {
 
     public AnimalConsultaView(Consumer<Animal> onConfirm) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.onConfirm = onConfirm;
     }
 

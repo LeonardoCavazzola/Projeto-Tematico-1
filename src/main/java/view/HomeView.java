@@ -4,6 +4,7 @@ public class HomeView extends javax.swing.JFrame {
 
     public HomeView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")

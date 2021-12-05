@@ -38,6 +38,10 @@ public class Animal {
         this.adotante = adotante;
     }
 
+    public void addHistorico(Historico historico) {
+        this.historicos.add(historico);
+    }
+
     public Long getId() {
         return id;
     }

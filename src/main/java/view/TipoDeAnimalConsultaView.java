@@ -15,6 +15,7 @@ public class TipoDeAnimalConsultaView extends javax.swing.JFrame {
 
     public TipoDeAnimalConsultaView(Consumer<TipoDeAnimal> onConfirm) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.onConfirm = onConfirm;
     }
 

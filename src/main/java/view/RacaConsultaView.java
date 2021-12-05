@@ -17,6 +17,7 @@ public class RacaConsultaView extends javax.swing.JFrame {
 
     public RacaConsultaView(Consumer<Raca> onConfirm) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.onConfirm = onConfirm;
     }
 

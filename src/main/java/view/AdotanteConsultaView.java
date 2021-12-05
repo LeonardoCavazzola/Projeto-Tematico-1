@@ -15,6 +15,7 @@ public class AdotanteConsultaView extends javax.swing.JFrame {
 
     public AdotanteConsultaView(Consumer<Adotante> onConfirm) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.onConfirm = onConfirm;
     }
 

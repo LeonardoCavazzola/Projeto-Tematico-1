@@ -2,8 +2,13 @@ package view;
 
 import model.Adotante;
 import model.Animal;
+import model.Historico;
 import model.Raca;
 import service.AnimalService;
+
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwner, RacaConsultaOwner, AdotanteConsultaOwner {
 
@@ -11,10 +16,12 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
     private Animal animal = null;
     private Raca raca = null;
     private Adotante adotante = null;
+    private List<Historico> historicos = new ArrayList<>();
     private final AnimalService animalService = new AnimalService();
 
     public AnimalView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     private void setEntity(Animal animal) {
@@ -26,6 +33,7 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         this.jCheckBox1.setSelected(animal.getAdotado());
         this.setAdotante(animal.getAdotante());
         this.jFormattedTextFieldAdocao.setText(StringLocalDateConverter.localDateToString(animal.getDataDeAdocao()));
+        this.setHistoricos(animal.getHistoricos());
         this.habilitarDesabiliarBotoes();
     }
 
@@ -36,7 +44,37 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
 
     private void setAdotante(Adotante adotante) {
         this.adotante = adotante;
-        this.jTextFieldAdotante.setText(adotante.getNome());
+        if (adotante != null) {
+            this.jTextFieldAdotante.setText(adotante.getNome());
+        }
+    }
+
+    private void setHistoricos(List<Historico> historicos) {
+        this.historicos = historicos;
+
+        DefaultTableModel model = (DefaultTableModel) this.jTable1.getModel();
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+
+        this.animal.getHistoricos().forEach(historico1 -> model.addRow(new Object[]{
+                historico1.getRegistro(),
+                StringLocalDateConverter.localDateToString(historico1.getDataTime()),
+        }));
+    }
+
+    private void addHistorico(Historico historico) {
+        this.historicos.add(historico);
+
+        DefaultTableModel model = (DefaultTableModel) this.jTable1.getModel();
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+
+        this.historicos.forEach(historico1 -> model.addRow(new Object[]{
+                historico1.getRegistro(),
+                StringLocalDateConverter.localDateToString(historico1.getDataTime()),
+        }));
     }
 
     private void setEnabledCampos(Boolean enabled) {
@@ -69,6 +107,12 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         this.setEnabledCampos(false);
         this.setEnabledAdotanteCampos(false);
         this.habilitarDesabiliarBotoes();
+
+        this.historicos = new ArrayList<>();
+        DefaultTableModel model = (DefaultTableModel) this.jTable1.getModel();
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
     }
 
     private void novo() {
@@ -97,6 +141,7 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         this.jButtonNovo.setEnabled(operacao == null);
         this.jButtonBuscar.setEnabled(operacao == null);
         this.jButtonCancelar.setEnabled(operacao != null);
+        this.jButtonAddHistorico.setEnabled(operacao != null);
     }
 
     private void create() {
@@ -106,7 +151,7 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
                 StringLocalDateConverter.stringToLocalDate(jFormattedTextFieldAdocao.getText()),
                 jCheckBox1.isSelected(),
                 raca,
-                null,
+                historicos,
                 adotante
         );
         Animal animal = this.animalService.create(this.animal);
@@ -119,9 +164,8 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         this.animal.setDataDeAdocao(StringLocalDateConverter.stringToLocalDate(jFormattedTextFieldAdocao.getText()));
         this.animal.setAdotado(jCheckBox1.isSelected());
         this.animal.setRaca(raca);
-        this.animal.setHistoricos(null);
+        this.animal.setHistoricos(historicos);
         this.animal.setAdotante(adotante);
-
 
         this.animalService.update(animal);
     }
@@ -162,8 +206,9 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         jTable1 = new javax.swing.JTable();
         jFormattedTextFieldNascimento = new javax.swing.JFormattedTextField();
         jFormattedTextFieldAdocao = new javax.swing.JFormattedTextField();
+        jButtonAddHistorico = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jButtonConfirmar.setText("Confirmar");
         jButtonConfirmar.setEnabled(false);
@@ -250,17 +295,33 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                        {},
-                        {},
-                        {},
-                        {}
-                },
-                new String[]{
+            new Object [][] {
 
-                }
-        ));
+            },
+            new String [] {
+                "Registro", "Data"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         jFormattedTextFieldNascimento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
         jFormattedTextFieldNascimento.setEnabled(false);
@@ -268,96 +329,107 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         jFormattedTextFieldAdocao.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
         jFormattedTextFieldAdocao.setEnabled(false);
 
+        jButtonAddHistorico.setText("Adicionar Historico");
+        jButtonAddHistorico.setEnabled(false);
+        jButtonAddHistorico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddHistoricoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabelNome3)
-                                                        .addComponent(jLabelNome2))
-                                                .addGap(23, 23, 23)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(jTextFieldAdotante)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jButtonAdotante, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(jFormattedTextFieldAdocao)))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabelID)
-                                                        .addComponent(jLabelNome)
-                                                        .addComponent(jLabelNome1)
-                                                        .addComponent(jLabelTipo))
-                                                .addGap(46, 46, 46)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                .addComponent(jTextFieldRaca)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jButtonRaca, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(jTextFieldNome)
-                                                        .addComponent(jTextFieldID)
-                                                        .addComponent(jFormattedTextFieldNascimento)))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jCheckBox1)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jButtonConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)))
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelNome3)
+                            .addComponent(jLabelNome2))
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextFieldAdotante)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonAdotante, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jFormattedTextFieldAdocao)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelID)
+                            .addComponent(jLabelNome)
+                            .addComponent(jLabelNome1)
+                            .addComponent(jLabelTipo))
+                        .addGap(46, 46, 46)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jTextFieldRaca)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonRaca, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldNome)
+                            .addComponent(jTextFieldID)
+                            .addComponent(jFormattedTextFieldNascimento)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jCheckBox1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addComponent(jButtonAddHistorico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabelID)
-                                        .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabelNome)
-                                        .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabelNome1)
-                                        .addComponent(jFormattedTextFieldNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabelTipo)
-                                        .addComponent(jTextFieldRaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButtonRaca))
-                                .addGap(18, 18, 18)
-                                .addComponent(jCheckBox1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabelNome3)
-                                        .addComponent(jTextFieldAdotante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButtonAdotante))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabelNome2)
-                                        .addComponent(jFormattedTextFieldAdocao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButtonConfirmar)
-                                        .addComponent(jButtonCancelar)
-                                        .addComponent(jButtonAlterar)
-                                        .addComponent(jButtonBuscar)
-                                        .addComponent(jButtonNovo))
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelID)
+                    .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelNome)
+                    .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelNome1)
+                    .addComponent(jFormattedTextFieldNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelTipo)
+                    .addComponent(jTextFieldRaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonRaca))
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelNome3)
+                    .addComponent(jTextFieldAdotante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAdotante))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelNome2)
+                    .addComponent(jFormattedTextFieldAdocao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonAddHistorico)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonConfirmar)
+                    .addComponent(jButtonCancelar)
+                    .addComponent(jButtonAlterar)
+                    .addComponent(jButtonBuscar)
+                    .addComponent(jButtonNovo))
+                .addContainerGap())
         );
 
         pack();
@@ -395,7 +467,12 @@ public class AnimalView extends javax.swing.JFrame implements AnimalConsultaOwne
         this.setEnabledAdotanteCampos(jCheckBox1.isSelected());
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
+    private void jButtonAddHistoricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddHistoricoActionPerformed
+        new HistoricoView(this::addHistorico).setVisible(true);
+    }//GEN-LAST:event_jButtonAddHistoricoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAddHistorico;
     private javax.swing.JButton jButtonAdotante;
     private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonBuscar;

@@ -15,6 +15,7 @@ public class DoadorConsultaView extends javax.swing.JFrame {
 
     public DoadorConsultaView(Consumer<Doador> onConfirm) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.onConfirm = onConfirm;
     }
 

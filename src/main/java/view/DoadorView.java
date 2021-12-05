@@ -11,6 +11,7 @@ public class DoadorView extends javax.swing.JFrame implements DoadorConsultaOwne
 
     public DoadorView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     private void setEntity(Doador doador) {
