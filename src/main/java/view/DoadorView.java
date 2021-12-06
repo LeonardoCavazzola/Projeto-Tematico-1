@@ -62,7 +62,6 @@ public class DoadorView extends javax.swing.JFrame implements DoadorConsultaOwne
     }
 
     private void create() {
-        System.out.println(jFormattedTextFieldNascimento.getText());
         this.doador = new Doador(jTextFieldNome.getText(), StringLocalDateConverter.stringToLocalDate(jFormattedTextFieldNascimento.getText()));
         Doador doador = this.service.create(this.doador);
         this.jTextFieldID.setText(doador.getId().toString());

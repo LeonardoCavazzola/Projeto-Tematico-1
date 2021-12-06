@@ -1,16 +1,7 @@
 package view;
 
 import model.Adotante;
-import model.Raca;
-import model.TipoDeAnimal;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.hibernate.type.LocalDateType;
 import service.AdotanteService;
-import service.RacaService;
-
-import java.time.LocalDate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AdotanteView extends javax.swing.JFrame implements AdotanteConsultaOwner {
 
@@ -71,7 +62,6 @@ public class AdotanteView extends javax.swing.JFrame implements AdotanteConsulta
     }
 
     private void create() {
-        System.out.println(jFormattedTextFieldNascimento.getText());
         this.adotante = new Adotante(jTextFieldNome.getText(), StringLocalDateConverter.stringToLocalDate(jFormattedTextFieldNascimento.getText()));
         Adotante adotante = this.service.create(this.adotante);
         this.jTextFieldID.setText(adotante.getId().toString());
